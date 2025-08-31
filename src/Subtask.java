@@ -1,14 +1,22 @@
 public class Subtask extends Task{
-    private final int epicId;
+    private int epicId;
 
-    public Subtask(String name, String description, Status status, int epicId) {
+    public Subtask(String name, String description, Status status) {
         super(name, description, status);
-        this.epicId = epicId;
     }
 
 
     public int getEpicId() {
         return epicId;
+    }
+
+    public void setEpicId(int id) {
+        if (epicId == id) {
+            System.out.println("Подзадачу нельзя сделать своим эпиком!");
+            return;
+        } else {
+            epicId = id;
+        }
     }
 
     @Override
