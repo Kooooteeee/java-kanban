@@ -48,6 +48,4 @@ class InMemoryTaskManagerTest {
         assertEquals(task, taskManager.getHistory().get(0));
     }
 
-
-
 }

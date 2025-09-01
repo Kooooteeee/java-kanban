@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
+
+    List<Task> getHistory();
     /*методы для tasks*/
     List<Task> getTasks();
 
