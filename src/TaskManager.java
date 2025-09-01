@@ -1,8 +1,9 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
     /*методы для tasks*/
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
     void deleteAllTasks();
 
@@ -15,7 +16,7 @@ public interface TaskManager {
     void updateTask(Task task);
 
     /*методы для epics*/
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
     void deleteAllEpics();
 
@@ -27,32 +28,10 @@ public interface TaskManager {
 
     void updateEpic(Epic epic);
 
-    default void updateEpicStatus(Epic epic) {
-        if (epic.getSubtasks().isEmpty()) {
-            epic.setStatus(Status.NEW);
-        } else {
-            boolean isNew = true;
-            boolean isDone = true;
-            boolean isInProgress = true;
-            for (Subtask subtask : epic.getSubtasks()) {
-                if (subtask.getStatus() == Status.NEW) {
-                    isDone = false;
-                }
-                if (subtask.getStatus() == Status.DONE) {
-                    isNew = false;
-                }
-            }
-
-            if (isDone) epic.setStatus(Status.DONE);
-            else if (isNew) epic.setStatus(Status.NEW);
-            else epic.setStatus(Status.IN_PROGRESS);
-        }
-    }
-
-    ArrayList<Subtask> getEpicsSubtasks(int id);
+    List<Subtask> getEpicsSubtasks(int id);
 
     /*методы для subtasks*/
-    ArrayList<Subtask> getSubtasks();
+    List<Subtask> getSubtasks();
 
     void deleteAllSubtasks();
 

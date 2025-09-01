@@ -1,11 +1,12 @@
 import java.util.ArrayList;
-public class InMemoryHistoryManager implements HistoryManager{
+import java.util.List;
+public class InMemoryHistoryManager implements HistoryManager {
 
-    private final ArrayList<Task> history = new ArrayList<>();
+    private final List<Task> history = new ArrayList<>();
 
     @Override
     public void addTask(Task task) {
-        if (history.size() > 10) {
+        if (history.size() >= 10) {
             history.removeFirst();
             history.add(task);
         } else {
@@ -14,7 +15,7 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return history;
     }
 }

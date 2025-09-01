@@ -1,22 +1,24 @@
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
 
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     private int idCounter = 1;
 
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
 /*методы для tasks*/
 @Override
-public ArrayList<Task> getTasks() {
+public List<Task> getTasks() {
         return new ArrayList<>(tasks.values());
     }
 
@@ -66,7 +68,7 @@ public ArrayList<Task> getTasks() {
 
 /*методы для epics*/
 @Override
-public ArrayList<Epic> getEpics() {
+public List<Epic> getEpics() {
         return new ArrayList<>(epics.values());
     }
 
@@ -78,7 +80,7 @@ public ArrayList<Epic> getEpics() {
 
     @Override
     public void deleteEpic(int id) {
-        ArrayList<Subtask> epicSubtasks = epics.get(id).getSubtasks();
+        List<Subtask> epicSubtasks = epics.get(id).getSubtasks();
         for(Subtask subtask : epicSubtasks) {
             subtasks.remove(subtask.getId());
         }
@@ -122,14 +124,36 @@ public ArrayList<Epic> getEpics() {
     }
 
     @Override
-    public ArrayList<Subtask> getEpicsSubtasks(int id) {
+    public List<Subtask> getEpicsSubtasks(int id) {
         return epics.get(id).getSubtasks();
+    }
+
+    private void updateEpicStatus(Epic epic) {
+        if (epic.getSubtasks().isEmpty()) {
+            epic.setStatus(Status.NEW);
+        } else {
+            boolean isNew = true;
+            boolean isDone = true;
+            boolean isInProgress = true;
+            for (Subtask subtask : epic.getSubtasks()) {
+                if (subtask.getStatus() == Status.NEW) {
+                    isDone = false;
+                }
+                if (subtask.getStatus() == Status.DONE) {
+                    isNew = false;
+                }
+            }
+
+            if (isDone) epic.setStatus(Status.DONE);
+            else if (isNew) epic.setStatus(Status.NEW);
+            else epic.setStatus(Status.IN_PROGRESS);
+        }
     }
 //***********************************************************
 
 /*методы для subtasks*/
 @Override
-public ArrayList<Subtask> getSubtasks() {
+public List<Subtask> getSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
 
