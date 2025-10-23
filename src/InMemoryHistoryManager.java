@@ -58,9 +58,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             remove(task.getId());
             linkLast(task);
         } else {
-            if (size == 10) {
-                remove(head.data.getId());
-            }
             linkLast(task);
         }
 
