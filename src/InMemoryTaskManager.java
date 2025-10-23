@@ -95,7 +95,7 @@ public List<Epic> getEpics() {
     @Override
     public void deleteEpic(int id) {
         List<Subtask> epicSubtasks = epics.get(id).getSubtasks();
-        for(Subtask subtask : epicSubtasks) {
+        for (Subtask subtask : epicSubtasks) {
             historyManager.remove(subtask.getId());
             subtasks.remove(subtask.getId());
         }
