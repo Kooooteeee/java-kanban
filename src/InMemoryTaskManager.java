@@ -217,8 +217,7 @@ public List<Subtask> getSubtasks() {
     public void createSubtask(Subtask newSubtask, int epicId) {
         if (subtasks.containsValue(newSubtask)) {
             System.out.println("Такая подзадача уже есть!");
-        }
-        else if (!epics.containsKey(epicId)) {
+        } else if (!epics.containsKey(epicId)) {
             System.out.println("Эпик не найден");
         } else {
             newSubtask.setId(idCounter);
