@@ -18,6 +18,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 /*методы для tasks*/
+
 @Override
 public List<Task> getTasks() {
         return new ArrayList<>(tasks.values());
@@ -69,9 +70,11 @@ public List<Task> getTasks() {
             System.out.println("Такой задачи нет :(");
         }
     }
+
 //***********************************************************
 
 /*методы для epics*/
+
 @Override
 public List<Epic> getEpics() {
         return new ArrayList<>(epics.values());
@@ -161,9 +164,11 @@ public List<Epic> getEpics() {
             else epic.setStatus(Status.IN_PROGRESS);
         }
     }
+
 //***********************************************************
 
 /*методы для subtasks*/
+
 @Override
 public List<Subtask> getSubtasks() {
         return new ArrayList<>(subtasks.values());
@@ -239,7 +244,6 @@ public List<Subtask> getSubtasks() {
             System.out.println("Такой подзадачи нет :(");
         }
     }
+
 //***********************************************************
-
-
 }

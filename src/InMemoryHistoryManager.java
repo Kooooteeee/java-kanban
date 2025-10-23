@@ -89,6 +89,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         return history;
     }
 }
+
 class Node <Task> {
 
     public Task data;
