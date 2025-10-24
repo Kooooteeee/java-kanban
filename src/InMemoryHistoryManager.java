@@ -4,13 +4,11 @@ import java.util.HashMap;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private final List<Task> history = new ArrayList<>();
     private final HashMap<Integer, Node<Task>> smartHistory = new HashMap<>();
-    public Node<Task> head;
-    public Node<Task> tail;
-    private int size = 0;
+    private Node<Task> head;
+    private Node<Task> tail;
 
-    public void removeNode(Node<Task> node) {
+    private void removeNode(Node<Task> node) {
         if (node == head && node == tail) {    // единственный элемент
             head = null;
             tail = null;
@@ -28,9 +26,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         node.next = null;
     }
 
-    public void linkLast(Task task) {
+    private void linkLast(Task task) {
         Node<Task> node = new Node<>(task);
-        if (size == 0) {
+        if (smartHistory.isEmpty()) {
             node.prev = null;
             node.next = null;
             head = node;
@@ -41,16 +39,16 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         tail = node;
         smartHistory.put(task.getId(), node);
-        size++;
     }
 
-    public void getTasks() {
-        history.clear();
+    public List<Task> getTasks() {
+        List<Task> history = new ArrayList<>();
         Node<Task> workNode = head;
         while (workNode != null) {
             history.add(workNode.data);
             workNode = workNode.next;
         }
+        return history;
     }
 
     @Override
@@ -67,17 +65,15 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void remove(int id) {
         if (smartHistory.containsKey(id)) {
-            if (size == 1) {
+            if (smartHistory.size() == 1) {
                 smartHistory.remove(id);
                 head = null;
                 tail = null;
-                size--;
-            } else if (size == 0) {
+            } else if (smartHistory.isEmpty()) {
                 System.out.println("История пуста!");
             } else {
                 removeNode(smartHistory.get(id));
                 smartHistory.remove(id);
-                size--;
             }
         } else {
             System.out.println("Такой записи в истории просмотров нет!");
@@ -86,7 +82,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        getTasks();
-        return history;
+        return getTasks();
     }
 }
