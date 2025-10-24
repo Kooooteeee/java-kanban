@@ -42,6 +42,7 @@ class InMemoryHistoryManagerTest {
 
     @Test
     public void testOfRemovingValues() {
+        historyManager.remove(0);
         int idCounter = 0;
         for (int i = 0; i < 11; i++) {
             task = new Task("t " + i , "test " + i, Status.NEW);
