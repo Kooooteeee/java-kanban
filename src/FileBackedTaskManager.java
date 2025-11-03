@@ -17,25 +17,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteAllTasks() {
         super.deleteAllTasks();
-        if(!loading) save();
+        if (!loading) save();
     }
 
     @Override
     public void deleteTask(int id) {
         super.deleteTask(id);
-        if(!loading) save();
+        if (!loading) save();
     }
 
     @Override
     public void createTask(Task newTask) {
         super.createTask(newTask);
-        if(!loading) save();
+        if (!loading) save();
     }
 
     @Override
     public void updateTask(Task task) {
         super.updateTask(task);
-        if(!loading) save();
+        if (!loading) save();
     }
 
 //***********************************************************
@@ -45,25 +45,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteAllEpics() {
         super.deleteAllEpics();
-        if(!loading) save();
+        if (!loading) save();
     }
 
     @Override
     public void deleteEpic(int id) {
         super.deleteEpic(id);
-        if(!loading) save();
+        if (!loading) save();
     }
 
     @Override
     public void createEpic(Epic newEpic) {
         super.createEpic(newEpic);
-        if(!loading) save();
+        if (!loading) save();
     }
 
     @Override
     public void updateEpic(Epic epic) {
         super.updateEpic(epic);
-        if(!loading) save();
+        if (!loading) save();
     }
 
 //***********************************************************
@@ -73,25 +73,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteAllSubtasks() {
         super.deleteAllSubtasks();
-        if(!loading) save();
+        if (!loading) save();
     }
 
     @Override
     public void deleteSubtask(int id) {
         super.deleteSubtask(id);
-        if(!loading) save();
+        if (!loading) save();
     }
 
     @Override
     public void createSubtask(Subtask newSubtask, int epicId) {
         super.createSubtask(newSubtask, epicId);
-        if(!loading) save();
+        if (!loading) save();
     }
 
     @Override
     public void updateSubtask(Subtask newSubtask) {
         super.updateSubtask(newSubtask);
-        if(!loading) save();
+        if (!loading) save();
     }
 
     public void save() {
