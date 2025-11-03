@@ -10,7 +10,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
-    private int idCounter = 1;
+    protected int idCounter = 1;
 
     @Override
     public List<Task> getHistory() {
