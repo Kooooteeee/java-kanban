@@ -1,10 +1,9 @@
-public class Subtask extends Task{
+public class Subtask extends Task {
     private int epicId;
 
     public Subtask(String name, String description, Status status) {
         super(name, description, status);
     }
-
 
     public int getEpicId() {
         return epicId;

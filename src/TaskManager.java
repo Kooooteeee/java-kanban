@@ -1,10 +1,11 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
 
     List<Task> getHistory();
+
     /*методы для tasks*/
+
     List<Task> getTasks();
 
     void deleteAllTasks();
@@ -18,6 +19,7 @@ public interface TaskManager {
     void updateTask(Task task);
 
     /*методы для epics*/
+
     List<Epic> getEpics();
 
     void deleteAllEpics();
@@ -33,6 +35,7 @@ public interface TaskManager {
     List<Subtask> getEpicsSubtasks(int id);
 
     /*методы для subtasks*/
+
     List<Subtask> getSubtasks();
 
     void deleteAllSubtasks();

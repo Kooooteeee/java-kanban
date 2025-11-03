@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class Epic extends Task{
+public class Epic extends Task {
     private List<Subtask> subtasks;
 
     public Epic(String name, String description, Status status) {
@@ -23,7 +23,6 @@ public class Epic extends Task{
     public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
     }
-
 
     @Override
     public String toString() {
