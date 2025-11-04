@@ -94,19 +94,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (!loading) save();
     }
 
-    public void save() {
+    private void save() {
         try {
-            Path tmp = Files.createTempFile(path.getParent(), "tasks-", ".csv");
+            Path target = path.toAbsolutePath();
+            Path dir = target.getParent();
+            if (dir != null) {
+                Files.createDirectories(dir);
+            }
 
             StringBuilder sb = new StringBuilder();
             sb.append("id,type,name,status,description,epic\n");
-            for (Task t : super.getTasks())    sb.append(toString(t));
-            for (Epic e : super.getEpics())    sb.append(toString(e));
-            for (Subtask s : super.getSubtasks())  sb.append(toString(s));
+            for (Task t : super.getTasks())    sb.append(toString(t)).append('\n');
+            for (Epic e : super.getEpics())    sb.append(toString(e)).append('\n');
+            for (Subtask s : super.getSubtasks())  sb.append(toString(s)).append('\n');
 
-            Files.writeString(tmp, sb.toString(), StandardCharsets.UTF_8);
-
-            Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            Files.writeString(target, sb.toString(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка сохранения файла");
         }
@@ -142,17 +144,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return fileManager;
     }
 
-    public String toString(Task task) {
+    private String toString(Task task) {
         final String type = (task instanceof Subtask) ? "SUBTASK" :
                 (task instanceof Epic) ? "EPIC" : "TASK";
         final String strEnd = (task instanceof Subtask) ?
                 String.valueOf(((Subtask) task).getEpicId()) : "";
 
-        return String.format("%d,%s,%s,%s,%s,%s\n",
+        return String.format("%d,%s,%s,%s,%s,%s",
                 task.getId(), type, task.getName(), task.getStatus(), task.getDescription(), strEnd);
     }
 
-    public static Task fromString(String value) {
+    private static Task fromString(String value) {
         String[] str = value.split(",");
         int id = Integer.parseInt(str[0]);
         Task task;

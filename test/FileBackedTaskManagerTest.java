@@ -19,7 +19,7 @@ class FileBackedTaskManagerTest {
 
     @Test
     void saveEmptyManagerProducesHeaderOnlyAndLoadRestoresEmpty() throws IOException {
-        mgr.save();
+        mgr.deleteAllTasks();
 
         String text = Files.readString(file, StandardCharsets.UTF_8);
         assertEquals("id,type,name,status,description,epic\n", text);
