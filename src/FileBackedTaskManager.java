@@ -7,8 +7,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final Path path;
 
-    private boolean loading = false;
-
     public FileBackedTaskManager(Path path) {
         this.path = path;
     }
@@ -16,25 +14,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteAllTasks() {
         super.deleteAllTasks();
-        if (!loading) save();
+        save();
     }
 
     @Override
     public void deleteTask(int id) {
         super.deleteTask(id);
-        if (!loading) save();
+        save();
     }
 
     @Override
     public void createTask(Task newTask) {
         super.createTask(newTask);
-        if (!loading) save();
+        save();
     }
 
     @Override
     public void updateTask(Task task) {
         super.updateTask(task);
-        if (!loading) save();
+        save();
     }
 
 //***********************************************************
@@ -44,25 +42,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteAllEpics() {
         super.deleteAllEpics();
-        if (!loading) save();
+        save();
     }
 
     @Override
     public void deleteEpic(int id) {
         super.deleteEpic(id);
-        if (!loading) save();
+        save();
     }
 
     @Override
     public void createEpic(Epic newEpic) {
         super.createEpic(newEpic);
-        if (!loading) save();
+        save();
     }
 
     @Override
     public void updateEpic(Epic epic) {
         super.updateEpic(epic);
-        if (!loading) save();
+        save();
     }
 
 //***********************************************************
@@ -72,25 +70,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteAllSubtasks() {
         super.deleteAllSubtasks();
-        if (!loading) save();
+        save();
     }
 
     @Override
     public void deleteSubtask(int id) {
         super.deleteSubtask(id);
-        if (!loading) save();
+        save();
     }
 
     @Override
     public void createSubtask(Subtask newSubtask, int epicId) {
         super.createSubtask(newSubtask, epicId);
-        if (!loading) save();
+        save();
     }
 
     @Override
     public void updateSubtask(Subtask newSubtask) {
         super.updateSubtask(newSubtask);
-        if (!loading) save();
+        save();
     }
 
     private void save() {
@@ -115,7 +113,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static FileBackedTaskManager loadFromFile(File file) throws IOException {
         FileBackedTaskManager fileManager = new FileBackedTaskManager(file.toPath());
-        fileManager.loading = true;
         if (Files.exists(file.toPath())) {
             try (BufferedReader br = new BufferedReader(
                     new FileReader(String.valueOf(file.toPath()), StandardCharsets.UTF_8))) {
@@ -125,14 +122,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     Task task = fromString(br.readLine());
                     if (task.getId() > maxId) maxId = task.getId();
                     if (task instanceof Subtask) {
-                        fileManager.idCounter = task.getId();
-                        fileManager.createSubtask(((Subtask) task), ((Subtask) task).getEpicId());
+                        fileManager.subtasks.put(task.getId(), ((Subtask) task));
+                        fileManager.epics.get(((Subtask) task).getEpicId()).addSubtask(((Subtask) task));
                     } else if (task instanceof Epic) {
-                        fileManager.idCounter = task.getId();
-                        fileManager.createEpic(((Epic) task));
+                        fileManager.epics.put(task.getId(), ((Epic) task));
                     } else {
-                        fileManager.idCounter = task.getId();
-                        fileManager.createTask(task);
+                        fileManager.tasks.put(task.getId(), task);
                     }
                 }
                 fileManager.idCounter = maxId + 1;
