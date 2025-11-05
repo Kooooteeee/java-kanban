@@ -144,7 +144,7 @@ public List<Epic> getEpics() {
         return epics.get(id).getSubtasks();
     }
 
-    private void updateEpicStatus(Epic epic) {
+    protected void updateEpicStatus(Epic epic) {
         if (epic.getSubtasks().isEmpty()) {
             epic.setStatus(Status.NEW);
         } else {

@@ -2,6 +2,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -125,12 +126,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         fileManager.subtasks.put(task.getId(), ((Subtask) task));
                         fileManager.epics.get(((Subtask) task).getEpicId()).addSubtask(((Subtask) task));
                     } else if (task instanceof Epic) {
+                        Epic epic = (Epic) task;
+                        epic.setSubtasks(new ArrayList<>());
                         fileManager.epics.put(task.getId(), ((Epic) task));
                     } else {
                         fileManager.tasks.put(task.getId(), task);
                     }
                 }
                 fileManager.idCounter = maxId + 1;
+                for (Epic e : fileManager.epics.values()) {
+                    fileManager.updateEpicStatus(e); //на всякий случай пересчитваем состояния эпиков, не уверен, что это нужно
+                }
             } catch (IOException e) {
                 throw new ManagerSaveException("Файл не найден");
             }
