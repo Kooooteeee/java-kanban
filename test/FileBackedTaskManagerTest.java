@@ -3,26 +3,27 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.time.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest<TaskManager> {
 
-    @TempDir Path tempDir;
+    @TempDir Path dir;
     Path file;
-    FileBackedTaskManager mgr;
 
-    @BeforeEach
-    void setUp() {
-        file = tempDir.resolve("tasks.csv");
-        mgr  = new FileBackedTaskManager(file);
+    @Override
+    protected TaskManager createManager() {
+        file = dir.resolve("tasks.csv");
+        return new FileBackedTaskManager(file);
     }
 
     @Test
-    void saveEmptyManagerProducesHeaderOnlyAndLoadRestoresEmpty() throws IOException {
+    void saveEmptyManagerHeaderAndLoadBack() throws IOException {
+        Files.deleteIfExists(file);
         mgr.deleteAllTasks();
-
         String text = Files.readString(file, StandardCharsets.UTF_8);
-        assertEquals("id,type,name,status,description,epic\n", text);
+        assertEquals("id,type,name,status,description,epic,startTime,duration\n", text);
 
         FileBackedTaskManager loaded = FileBackedTaskManager.loadFromFile(file.toFile());
         assertTrue(loaded.getTasks().isEmpty());
@@ -31,18 +32,14 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void saveAndLoadThreeEntitiesRestoreAllFieldsAndLinks() throws IOException {
-        Task t = new Task("t1", "d1", Status.NEW);
+    void saveLoadRestoresFieldsLinksIdsPrioritizedAndEpicTime() throws IOException {
+        Task t = new Task("t","d", Status.NEW, Duration.ofMinutes(10), LocalDateTime.of(2025,1,1,9,0));
         mgr.createTask(t);
-
-        Epic e = new Epic("e1", "ed1", Status.NEW);
+        Epic e = new Epic("e","ed", Status.NEW);
         mgr.createEpic(e);
         int epicId = e.getId();
-
-        Subtask s = new Subtask("s1","sd1", Status.IN_PROGRESS);
+        Subtask s = new Subtask("s","sd", Status.IN_PROGRESS, Duration.ofMinutes(30), LocalDateTime.of(2025,1,1,10,0));
         mgr.createSubtask(s, epicId);
-
-        assertTrue(Files.size(file) > 0);
 
         FileBackedTaskManager loaded = FileBackedTaskManager.loadFromFile(file.toFile());
 
@@ -55,20 +52,22 @@ class FileBackedTaskManagerTest {
         Subtask sL = loaded.getSubtasks().getFirst();
 
         assertEquals(t.getId(), tL.getId());
-        assertEquals(t.getName(), tL.getName());
-        assertEquals(t.getDescription(), tL.getDescription());
-        assertEquals(t.getStatus(), tL.getStatus());
+        assertEquals(t.getStartTime(), tL.getStartTime());
+        assertEquals(t.getDuration(), tL.getDuration());
 
         assertEquals(e.getId(), eL.getId());
-        assertEquals(e.getName(), eL.getName());
-        assertEquals(e.getStatus(), eL.getStatus());
+        assertEquals(s.getEpicId(), sL.getEpicId());
 
-        assertEquals(s.getId(), sL.getId());
-        assertEquals(s.getEpicId(), sL.getEpicId()); // важная связка
+        Task next = new Task("next","n", Status.DONE, Duration.ofMinutes(5), LocalDateTime.of(2025,1,1,8,0));
+        loaded.createTask(next);
+        int expectedNextId = Math.max(Math.max(tL.getId(), eL.getId()), sL.getId()) + 1;
+        assertEquals(expectedNextId, next.getId());
 
-        Task newTask = new Task("next", "n", Status.DONE);
-        loaded.createTask(newTask);
-        assertEquals(Math.max(Math.max(tL.getId(), eL.getId()), sL.getId()) + 1, newTask.getId());
+        var pr = loaded.getPrioritizedTasks();
+        assertEquals(next.getId(), pr.get(0).getId());
+
+        assertEquals(LocalDateTime.of(2025,1,1,10,0), eL.getStartTime());
+        assertEquals(LocalDateTime.of(2025,1,1,10,30), eL.getEndTime());
+        assertEquals(Duration.ofMinutes(30), eL.getDuration());
     }
 }
-

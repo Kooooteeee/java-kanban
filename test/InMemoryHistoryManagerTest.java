@@ -1,64 +1,47 @@
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
+import java.time.*;
 
 class InMemoryHistoryManagerTest {
 
-    HistoryManager historyManager = new InMemoryHistoryManager();
-    Task task;
+    HistoryManager hm;
+    Task t;
 
-    @Test
-    public void testOfUnlimitSizeAndAddingTasks() {
-        int idCounter = 0;
-        for (int i = 0; i < 15; i++) {
-            task = new Task("t " + i , "test " + i, Status.NEW);
-            task.setId(idCounter);
-            idCounter++;
-            historyManager.addTask(task);
-        }
-        task = new Task("t " + 5 , "test " + 5, Status.NEW);
-        task.setId(5);
-        historyManager.addTask(task);
-        System.out.println(historyManager.getHistory());
-        Assertions.assertEquals(15, historyManager.getHistory().size());
+    @BeforeEach
+    void setUp() {
+        hm = new InMemoryHistoryManager();
     }
 
     @Test
-    public void  testOfUniqueValues() {
-        int idCounter = 0;
-        for (int i = 0; i < 15; i++) {
-            task = new Task("t " + i , "test " + i, Status.NEW);
-            task.setId(idCounter);
-            if(i%2 == 0) {
-                idCounter++;
-            }
-            historyManager.addTask(task);
-        }
-        //System.out.println(historyManager.getHistory());
-        Assertions.assertEquals(8, historyManager.getHistory().size());
+    void emptyHistory() {
+        assertTrue(hm.getHistory().isEmpty());
     }
 
     @Test
-    public void testOfRemovingValues() {
-        historyManager.remove(0);
-        int idCounter = 0;
-        for (int i = 0; i < 11; i++) {
-            task = new Task("t " + i , "test " + i, Status.NEW);
-            task.setId(idCounter);
-            historyManager.addTask(task);
-            idCounter++;
+    void dedupAndOrder() {
+        for (int i = 0; i < 5; i++) {
+            t = new Task("t"+i, "d"+i, Status.NEW, Duration.ofMinutes(1), LocalDateTime.now());
+            t.setId(i);
+            hm.addTask(t);
         }
-
-        historyManager.remove(0);
-        historyManager.remove(2);
-        historyManager.remove(10);
-        //System.out.println(historyManager.getHistory());
-        Assertions.assertEquals(8, historyManager.getHistory().size());
+        Task dup = new Task("t2", "d2", Status.NEW, Duration.ofMinutes(1), LocalDateTime.now());
+        dup.setId(2);
+        hm.addTask(dup);
+        assertEquals(5, hm.getHistory().size());
+        assertEquals(dup, hm.getHistory().getLast());
     }
 
-
-
-
+    @Test
+    void removeFirstMiddleLast() {
+        for (int i = 0; i < 4; i++) {
+            t = new Task("t"+i, "d"+i, Status.NEW, Duration.ofMinutes(1), LocalDateTime.now());
+            t.setId(i);
+            hm.addTask(t);
+        }
+        hm.remove(0);
+        hm.remove(2);
+        hm.remove(3);
+        assertEquals(1, hm.getHistory().size());
+        assertEquals(1, hm.getHistory().getFirst().getId());
+    }
 }
