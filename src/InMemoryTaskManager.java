@@ -86,7 +86,7 @@ public class InMemoryTaskManager implements TaskManager {
             newTask.setStatus(Status.NEW);
             tasks.put(newTask.getId(), newTask);
             //System.out.println("Id задачи: " + idCounter);
-            if(newTask.getStartTime() != null) {
+            if (newTask.getStartTime() != null) {
                 prioritized.add(newTask);
             }
             idCounter++;
@@ -100,7 +100,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (tasks.containsKey(task.getId())) {
             prioritized.remove(tasks.get(task.getId()));
             tasks.put(task.getId(), task);
-            if(task.getStartTime() != null) {
+            if (task.getStartTime() != null) {
                 prioritized.add(task);
             }
         } else {
@@ -142,9 +142,9 @@ public List<Epic> getEpics() {
             prioritized.remove(subtask);
             subtasks.remove(subtask.getId());
         }*/
-        epics.get(id).getSubtasks().forEach(subtask -> {historyManager.remove(subtask.getId());
+        epics.get(id).getSubtasks().forEach(subtask -> { historyManager.remove(subtask.getId());
             prioritized.remove(subtask);
-            subtasks.remove(subtask.getId());});
+            subtasks.remove(subtask.getId()); });
 
         historyManager.remove(id);
         epics.remove(id);
@@ -243,8 +243,8 @@ public List<Subtask> getSubtasks() {
             epic.getSubtasks().clear();
             updateEpicStatus(epic);
         }*/
-        epics.values().forEach(epic -> {epic.getSubtasks().clear();
-        updateEpicStatus(epic);});
+        epics.values().forEach(epic -> { epic.getSubtasks().clear();
+        updateEpicStatus(epic); });
     }
 
     @Override
@@ -292,7 +292,7 @@ public List<Subtask> getSubtasks() {
             updateEpicStatus(epics.get(newSubtask.getEpicId()));
             subtasks.put(newSubtask.getId(), newSubtask);
             //System.out.println("Id подзадачи: " + idCounter);
-            if(newSubtask.getStartTime() != null) {
+            if (newSubtask.getStartTime() != null) {
                 prioritized.add(newSubtask);
             }
             idCounter++;
@@ -317,7 +317,7 @@ public List<Subtask> getSubtasks() {
         epics.get(newEpicId).addSubtask(newSubtask);
         updateEpicStatus(epics.get(newEpicId));
         subtasks.put(newSubtask.getId(), newSubtask);
-        if(newSubtask.getStartTime() != null) {
+        if (newSubtask.getStartTime() != null) {
             prioritized.add(newSubtask);
         }
     }
