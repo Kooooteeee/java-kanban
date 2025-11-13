@@ -142,9 +142,11 @@ public List<Epic> getEpics() {
             prioritized.remove(subtask);
             subtasks.remove(subtask.getId());
         }*/
-        epics.get(id).getSubtasks().forEach(subtask -> { historyManager.remove(subtask.getId());
+        epics.get(id).getSubtasks().forEach(subtask -> {
+            historyManager.remove(subtask.getId());
             prioritized.remove(subtask);
-            subtasks.remove(subtask.getId()); });
+            subtasks.remove(subtask.getId());
+        });
 
         historyManager.remove(id);
         epics.remove(id);
@@ -243,8 +245,10 @@ public List<Subtask> getSubtasks() {
             epic.getSubtasks().clear();
             updateEpicStatus(epic);
         }*/
-        epics.values().forEach(epic -> { epic.getSubtasks().clear();
-        updateEpicStatus(epic); });
+        epics.values().forEach(epic -> {
+            epic.getSubtasks().clear();
+        updateEpicStatus(epic);
+        });
     }
 
     @Override
