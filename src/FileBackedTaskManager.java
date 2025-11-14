@@ -136,9 +136,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
                 fileManager.idCounter = maxId + 1;
-                /*for (Epic e : fileManager.epics.values()) {
-                    fileManager.updateEpicStatus(e); //на всякий случай пересчитваем состояния эпиков, не уверен, что это нужно
-                }*/
                 fileManager.epics.values().forEach(fileManager::updateEpicStatus);
                 fileManager.tasks.values().forEach(t -> {
                     if (t.getStartTime() != null) fileManager.prioritized.add(t);
