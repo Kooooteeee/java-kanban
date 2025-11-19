@@ -7,7 +7,7 @@ public class TasksHandler extends BaseHttpHandler {
 
     private final TaskManager manager;
 
-    public TasksHandler (TaskManager manager) {
+    public TasksHandler(TaskManager manager) {
         this.manager = manager;
     }
 
@@ -45,7 +45,7 @@ public class TasksHandler extends BaseHttpHandler {
                         int before = manager.getTasks().size();
                         manager.createTask(task);
                         int after = manager.getTasks().size();
-                        if(after != before) {
+                        if (after != before) {
                             sendText(exchange, "Задача создана!", 201);
                         } else {
                             sendHasIntersections(exchange, "Not Acceptable");
