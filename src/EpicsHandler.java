@@ -6,7 +6,7 @@ import java.util.List;
 public class EpicsHandler extends BaseHttpHandler {
     private final TaskManager manager;
 
-    public EpicsHandler (TaskManager manager) {
+    public EpicsHandler(TaskManager manager) {
         this.manager = manager;
     }
 
