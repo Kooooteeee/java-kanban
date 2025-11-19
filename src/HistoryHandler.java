@@ -6,12 +6,12 @@ public class HistoryHandler extends BaseHttpHandler {
 
     private final TaskManager manager;
 
-    public HistoryHandler (TaskManager manager) {
+    public HistoryHandler(TaskManager manager) {
         this.manager = manager;
     }
 
     @Override
-    public void handle (HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
 
         try {
