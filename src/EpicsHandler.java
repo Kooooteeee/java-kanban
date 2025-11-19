@@ -53,7 +53,7 @@ public class EpicsHandler extends BaseHttpHandler {
                     int before = manager.getEpics().size();
                     manager.createEpic(epic);
                     int after = manager.getEpics().size();
-                    if(after != before) {
+                    if (after != before) {
                         sendText(exchange, "Эпик создан!", 201);
                     } else {
                         sendHasIntersections(exchange, "Not Acceptable");

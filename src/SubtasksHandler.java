@@ -9,7 +9,7 @@ public class SubtasksHandler extends BaseHttpHandler {
 
     private final TaskManager manager;
 
-    public SubtasksHandler (TaskManager manager) {
+    public SubtasksHandler(TaskManager manager) {
         this.manager = manager;
     }
 
@@ -92,7 +92,7 @@ public class SubtasksHandler extends BaseHttpHandler {
                 default:
                     sendMethodNotFound(exchange);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             sendHasInternalServerError(exchange, "Internal Server Error");
         }
     }
