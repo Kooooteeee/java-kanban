@@ -57,9 +57,10 @@ public final class HttpTaskServer implements AutoCloseable {
         return "http://localhost:" + getPort();
     }
 
-    @Override public void close() { stop(); }
-
-
+    @Override public void close() {
+        stop();
+    }
+    
     public static void main(String[] args) throws IOException {
         TaskManager manager = Managers.getDefault();
         HttpTaskServer http = new HttpTaskServer(manager, DEFAULT_PORT);
