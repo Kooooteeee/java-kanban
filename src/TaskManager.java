@@ -49,4 +49,6 @@ public interface TaskManager {
     void createSubtask(Subtask newSubtask, int epicId);
 
     void updateSubtask(Subtask newSubtask);
+
+    List<Task> getPrioritizedTasks();
 }
