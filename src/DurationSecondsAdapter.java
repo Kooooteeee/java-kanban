@@ -15,6 +15,7 @@ public class DurationSecondsAdapter extends TypeAdapter<Duration> {
         }
         out.value(value.getSeconds());
     }
+
     @Override
     public Duration read(JsonReader in) throws IOException {
         if (in.peek() == JsonToken.NULL) {

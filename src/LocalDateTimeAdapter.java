@@ -15,6 +15,7 @@ public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
         }
         out.value(value.toString());
     }
+    
     @Override
     public LocalDateTime read(JsonReader in) throws IOException {
         if (in.peek() == JsonToken.NULL) {
