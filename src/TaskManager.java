@@ -4,6 +4,8 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
+    boolean hasIntersections(Task task);
+
     /*методы для tasks*/
 
     List<Task> getTasks();

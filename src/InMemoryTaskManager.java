@@ -38,6 +38,12 @@ public class InMemoryTaskManager implements TaskManager {
                 .anyMatch(t -> isTasksIntersects(task, t));
     }
 
+    @Override
+    public boolean hasIntersections(Task task) {
+        return isTaskIntersectsWithOther(task);
+    }
+
+    //метод для handler'а, чтобы не трогать внутреннюю логику менеджера
 
     /*методы для tasks*/
 
