@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class BaseHttpHandler implements HttpHandler {
+public abstract class BaseHttpHandler implements HttpHandler {
 
     protected final Gson gson = new GsonBuilder()
             .registerTypeAdapter(Duration.class, new DurationSecondsAdapter())
@@ -80,8 +80,5 @@ public class BaseHttpHandler implements HttpHandler {
         }
     }
 
-    @Override
-    public void handle(HttpExchange exchange) throws IOException {
-    }
 }
 

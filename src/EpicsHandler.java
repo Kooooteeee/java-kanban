@@ -46,14 +46,10 @@ public class EpicsHandler extends BaseHttpHandler {
 
                     String body = readBody(exchange);
                     Epic epic = gson.fromJson(body, Epic.class);
-                    if (manager.hasIntersections(epic)) {
-                        sendHasIntersections(exchange, "Not Acceptable");
-                        return;
-                    }
-                    int before = manager.getEpics().size();
-                    manager.createEpic(epic);
-                    int after = manager.getEpics().size();
-                    if (after != before) {
+
+                    boolean isCreated = manager.tryCreateEpic(epic);
+
+                    if (isCreated) {
                         sendText(exchange, "Эпик создан!", 201);
                     } else {
                         sendHasIntersections(exchange, "Not Acceptable");

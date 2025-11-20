@@ -30,20 +30,12 @@ public class InMemoryTaskManager implements TaskManager {
         return task1.getStartTime().isBefore(task2.getEndTime()) && task2.getStartTime().isBefore(task1.getEndTime());
     }
 
-
     private boolean isTaskIntersectsWithOther(Task task) {
         return prioritized.stream()
                 .filter(t -> t.getId() != task.getId())
                 .filter(t -> t.getStartTime() != null && t.getEndTime() != null)
                 .anyMatch(t -> isTasksIntersects(task, t));
     }
-
-    @Override
-    public boolean hasIntersections(Task task) {
-        return isTaskIntersectsWithOther(task);
-    }
-
-    //метод для handler'а, чтобы не трогать внутреннюю логику менеджера
 
     /*методы для tasks*/
 
@@ -78,6 +70,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public boolean tryCreateTask(Task newTask) {
+        if (isTaskIntersectsWithOther(newTask) || tasks.containsValue(newTask)) {
+            return false;
+        } else {
+            int before = getTasks().size();
+            createTask(newTask);
+            int after = getTasks().size();
+            return after != before;
+        }
+    }
+
+    @Override
     public void createTask(Task newTask) {
         if (tasks.containsValue(newTask)) {
             System.out.println("Такая задача уже есть!");
@@ -93,6 +97,13 @@ public class InMemoryTaskManager implements TaskManager {
             }
             idCounter++;
         }
+    }
+
+    @Override
+    public boolean tryUpdateTask(Task task) {
+        if (isTaskIntersectsWithOther(task)) return false;
+        updateTask(task);
+        return true;
     }
 
     @Override
@@ -151,6 +162,14 @@ public List<Epic> getEpics() {
             return null;
         }
 
+    }
+
+    @Override
+    public boolean tryCreateEpic(Epic newEpic) {
+        int before = getEpics().size();
+        createEpic(newEpic);
+        int after = getEpics().size();
+        return after != before;
     }
 
     @Override
@@ -251,6 +270,18 @@ public List<Subtask> getSubtasks() {
     }
 
     @Override
+    public boolean tryCreateSubtask(Subtask newSubtask, int epicId) {
+        if (isTaskIntersectsWithOther(newSubtask) || subtasks.containsValue(newSubtask)) {
+            return false;
+        } else {
+            int before = getSubtasks().size();
+            createSubtask(newSubtask, epicId);
+            int after = getSubtasks().size();
+            return after != before;
+        }
+    }
+
+    @Override
     public void createSubtask(Subtask newSubtask, int epicId) {
         if (subtasks.containsValue(newSubtask)) {
             System.out.println("Такая подзадача уже есть!");
@@ -270,6 +301,13 @@ public List<Subtask> getSubtasks() {
             }
             idCounter++;
         }
+    }
+
+    @Override
+    public boolean tryUpdateSubtask(Subtask newSubtask) {
+        if (isTaskIntersectsWithOther(newSubtask)) return false;
+        updateSubtask(newSubtask);
+        return true;
     }
 
     @Override

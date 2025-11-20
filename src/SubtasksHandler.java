@@ -40,18 +40,13 @@ public class SubtasksHandler extends BaseHttpHandler {
                     if (parts.length == 2) {
                         String body = readBody(exchange);
                         Subtask subtask = gson.fromJson(body, Subtask.class);
-                        if (manager.hasIntersections(subtask)) {
-                            sendHasIntersections(exchange, "Not Acceptable");
-                            return;
-                        }
 
                         JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
                         int epicId = jsonObject.get("epicId").getAsInt();
 
-                        int before = manager.getSubtasks().size();
-                        manager.createSubtask(subtask, epicId);
-                        int after = manager.getSubtasks().size();
-                        if (after != before) {
+                        boolean isCreated = manager.tryCreateSubtask(subtask, epicId);
+
+                        if (isCreated) {
                             sendText(exchange, "Подзадача добавлена!", 201);
                         } else {
                             sendHasIntersections(exchange, "Not Acceptable");
@@ -65,12 +60,15 @@ public class SubtasksHandler extends BaseHttpHandler {
                         String body = readBody(exchange);
                         Subtask subtask = gson.fromJson(body, Subtask.class);
                         subtask.setId(id);
-                        if (manager.hasIntersections(subtask)) {
+
+                        boolean isUpdated = manager.tryUpdateSubtask(subtask);
+
+                        if (isUpdated) {
+                            sendText(exchange, "Подзадача обновлена!", 201);
+                        } else {
                             sendHasIntersections(exchange, "Not Acceptable");
-                            return;
                         }
-                        manager.updateSubtask(subtask);
-                        sendText(exchange, "Подзадача обновлена!", 201);
+
                     }
                     break;
                 }

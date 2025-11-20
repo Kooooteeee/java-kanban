@@ -4,8 +4,6 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
-    boolean hasIntersections(Task task);
-
     /*методы для tasks*/
 
     List<Task> getTasks();
@@ -16,7 +14,11 @@ public interface TaskManager {
 
     Task getTask(int id);
 
+    boolean tryCreateTask(Task newTask);
+
     void createTask(Task newTask);
+
+    boolean tryUpdateTask(Task task);
 
     void updateTask(Task task);
 
@@ -29,6 +31,8 @@ public interface TaskManager {
     void deleteEpic(int id);
 
     Epic getEpic(int id);
+
+    boolean tryCreateEpic(Epic newEpic);
 
     void createEpic(Epic newEpic);
 
@@ -48,7 +52,11 @@ public interface TaskManager {
 
     int getSubtasksEpicId(Subtask subtask);
 
+    boolean tryCreateSubtask(Subtask newSubtask, int epicId);
+
     void createSubtask(Subtask newSubtask, int epicId);
+
+    boolean tryUpdateSubtask(Subtask newSubtask);
 
     void updateSubtask(Subtask newSubtask);
 

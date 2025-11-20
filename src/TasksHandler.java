@@ -38,14 +38,10 @@ public class TasksHandler extends BaseHttpHandler {
                     if (parts.length == 2) {
                         String body = readBody(exchange);
                         Task task = gson.fromJson(body, Task.class);
-                        if (manager.hasIntersections(task)) {
-                            sendHasIntersections(exchange, "Not Acceptable");
-                            return;
-                        }
-                        int before = manager.getTasks().size();
-                        manager.createTask(task);
-                        int after = manager.getTasks().size();
-                        if (after != before) {
+
+                        boolean isCreated = manager.tryCreateTask(task);
+
+                        if (isCreated) {
                             sendText(exchange, "Задача создана!", 201);
                         } else {
                             sendHasIntersections(exchange, "Not Acceptable");
@@ -59,12 +55,12 @@ public class TasksHandler extends BaseHttpHandler {
                         String body = readBody(exchange);
                         Task task = gson.fromJson(body, Task.class);
                         task.setId(id);
-                        if (manager.hasIntersections(task)) {
+                        boolean isUpdated = manager.tryUpdateTask(task);
+                        if (isUpdated) {
+                            sendText(exchange, "Задача обновлена!", 201);
+                        } else {
                             sendHasIntersections(exchange, "Not Acceptable");
-                            return;
                         }
-                        manager.updateTask(task);
-                        sendText(exchange, "Задача обновлена!", 201);
                     }
                     break;
                 }
